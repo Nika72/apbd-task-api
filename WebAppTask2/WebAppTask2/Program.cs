@@ -1,8 +1,6 @@
-using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using WebAppTask2.Interfaces;
-using WebAppTask2.repositories; // Adjust the namespace according to your project structure
+using WebAppTask2.Models;
+using WebAppTask2.repositories; 
 
 namespace WebAppTask2
 {
@@ -38,13 +36,40 @@ namespace WebAppTask2
 
             // Additional endpoints for animals
             app.MapGet("/animals", async (IAnimalRepository animalRepository) =>
-                    await animalRepository.GetAll())
+                await animalRepository.GetAll())
                 .WithOpenApi();
 
-            app.MapGet("/animals/{id}", (IAnimalRepository animalRepository, int id) => animalRepository.Get(id))
+            app.MapGet("/animals/{id}", (IAnimalRepository animalRepository, int id) =>
+                animalRepository.Get(id))
                 .WithOpenApi();
 
             // Additional endpoints for visits and other operations
+            app.MapGet("/visits/animal/{animalId}", async (IVisitRepository visitRepository, int animalId) =>
+                await visitRepository.GetAllForAnimal(animalId))
+                .WithOpenApi();
+
+            app.MapPost("/visits", async (IVisitRepository visitRepository, Visit visit) =>
+            {
+                visitRepository.Add(visit);
+                return Results.Created($"/visits/{visit.Id}", visit);
+            }).Accepts<Visit>("application/json").WithOpenApi();
+
+            app.MapPut("/visits/{id}", async (IVisitRepository visitRepository, int id, Visit visit) =>
+            {
+                if (id != visit.Id)
+                {
+                    return Results.BadRequest("Visit ID mismatch");
+                }
+
+                visitRepository.Update(visit);
+                return Results.NoContent();
+            }).Accepts<Visit>("application/json").WithOpenApi();
+
+            app.MapDelete("/visits/{id}", async (IVisitRepository visitRepository, int id) =>
+            {
+                visitRepository.Delete(id);
+                return Results.NoContent();
+            }).WithOpenApi();
 
             app.Run();
         }

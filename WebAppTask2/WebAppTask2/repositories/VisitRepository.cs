@@ -5,7 +5,7 @@ namespace WebAppTask2.repositories
 {
     public class VisitRepository : IVisitRepository
     {
-        private List<Visit> _visits = new List<Visit>();
+        private readonly List<Visit> _visits = new List<Visit>();
 
         public void Add(Visit visit)
         {
@@ -35,13 +35,13 @@ namespace WebAppTask2.repositories
         public Task<IEnumerable<Visit>> GetAllForAnimal(int animalId)
         {
             var animalVisits = _visits.Where(v => v.AnimalId == animalId).ToList();
-            return Task.FromResult(animalVisits.AsEnumerable());
+            return Task.FromResult<IEnumerable<Visit>>(animalVisits);
         }
 
         public Task<Visit?> GetById(int id)
         {
             var visit = _visits.FirstOrDefault(v => v.Id == id);
-            return Task.FromResult<Visit?>(visit);
+            return Task.FromResult(visit); // Nullable types do not need explicit type parameter
         }
     }
 }
