@@ -44,12 +44,14 @@ namespace WebAppTask2.Controllers
         }
 
         // PUT: api/animals/{id}
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateAnimal(int id, [FromBody] Animal updatedAnimal)
+        // PUT: api/animals
+        [HttpPut]
+        public async Task<IActionResult> UpdateAnimal([FromBody] Animal updatedAnimal)
         {
+            var id = updatedAnimal.Id; 
             var existingAnimal = await _animalRepository.Get(id);
             if (existingAnimal == null)
-                return NotFound(); // Return 404 Not Found if animal not found
+                return NotFound(); 
 
             existingAnimal.Name = updatedAnimal.Name;
             existingAnimal.Category = updatedAnimal.Category;
