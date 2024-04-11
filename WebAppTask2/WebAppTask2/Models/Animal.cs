@@ -1,15 +1,16 @@
-using WebAppTask2.Models;
+using System.Collections.Generic;
 
-namespace WebAppTask2.Models;
-
-// Animal.cs
-public class Animal
+namespace WebAppTask2.Models
 {
-    public int Id { get; set; }
-    public string Name { get; set; }
-    public string Category { get; set; } 
-    public double Weight { get; set; }
-    public string FurColor { get; set; }
-    public List<Visit> Visits { get; set; } = new List<Visit>();
-    
+    public class Animal
+    {
+        public int Id { get; set; }
+        public string Name { get; set; } = ""; // Initialize to an empty string
+        public string Category { get; set; } = ""; // Initialize to an empty string
+        public double Weight { get; set; }
+        public string FurColor { get; set; } = ""; // Initialize to an empty string
+
+        // Navigation property for related visits
+        public List<Visit> Visits { get; set; } = new List<Visit>();
+    }
 }
